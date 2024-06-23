@@ -9,9 +9,9 @@ import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { REQUEST_USER_KEY } from '../../constants';
+import { REQUEST_USER_KEY } from '../../utils/constants';
 import jwtConfig from '../../config/jwt.config';
-import { IS_PUBLIC_KEY } from '../../common/decorators/public.decorator';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
@@ -43,7 +43,6 @@ export class AccessTokenGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    // eslint-disable-next-line
     const [_, token] = request.headers.authorization?.split(' ') ?? [];
     return token;
   }

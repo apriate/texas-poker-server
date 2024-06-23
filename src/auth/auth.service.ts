@@ -8,8 +8,8 @@ import jwtConfig from '../config/jwt.config';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { HashingService } from './hashing.service';
-
-import { ActiveUserData } from './interfaces/active-user-data.interface';
+import { ActiveUser } from '../interfaces/IActiveUser';
+import { ResultData } from 'src/utils/common/result';
 
 @Injectable()
 export class AuthService {
@@ -23,16 +23,17 @@ export class AuthService {
   ) {}
 
   async generateTokens(user: User) {
-    const token = await this.signToken<Partial<ActiveUserData>>(user.id, {
+    const token = await this.signToken<Partial<ActiveUser>>(user.id, {
       account: user.account,
+      nickName: user.nickName,
     });
     return { token };
   }
 
-  private async signToken<T>(userId: number, payload?: T) {
+  private async signToken<T>(id: number, payload?: T) {
     return await this.jwtService.signAsync(
       {
-        sub: userId,
+        id,
         ...payload,
       },
       {
@@ -50,7 +51,7 @@ export class AuthService {
       where: [{ account }],
     });
     if (existingUser) {
-      throw new UnauthorizedException('User already exists');
+      return ResultData.fail('User already exists');
     }
 
     const hashedPassword = await this.hashingService.hash(password);
@@ -59,18 +60,20 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return this.userRepository.save(user);
+    const result = await this.userRepository.save(user);
+    return ResultData.success(result);
   }
 
   async signIn(signInDto: SignInDto) {
     const { account, password } = signInDto;
 
     const user = await this.userRepository.findOne({ where: { account } });
-    if (!user) throw new UnauthorizedException('User not found');
+    if (!user) return ResultData.fail('User not found');
 
     const isEqual = await this.hashingService.compare(password, user.password);
-    if (!isEqual) throw new UnauthorizedException('Password is incorrect');
+    if (!isEqual) return ResultData.fail('Password is incorrect');
 
-    return await this.generateTokens(user);
+    const result = await this.generateTokens(user);
+    return ResultData.success(result);
   }
 }
