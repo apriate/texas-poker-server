@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('game', { schema: 'poker_test' })
 export class Game {
@@ -20,12 +21,14 @@ export class Game {
   @Column('decimal', { name: 'pot', nullable: true, precision: 8, scale: 0 })
   pot: string | null;
 
+  @Exclude()
   @Column('timestamp', {
     name: 'create_time',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createTime: Date;
 
+  @Exclude()
   @Column('datetime', { name: 'update_time', nullable: true })
   updateTime: Date | null;
 }

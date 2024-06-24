@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/User';
 import jwtConfig from '../config/jwt.config';
-import { SignInDto } from './dto/sign-in.dto';
-import { SignUpDto } from './dto/sign-up.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register';
 import { HashingService } from './hashing.service';
 import { ActiveUser } from '../interfaces/IActiveUser';
 import { ResultData } from 'src/utils/common/result';
@@ -23,14 +23,14 @@ export class AuthService {
   ) {}
 
   async generateTokens(user: User) {
-    const token = await this.signToken<Partial<ActiveUser>>(user.id, {
+    const token = await this.getToken<Partial<ActiveUser>>(user.id, {
       account: user.account,
       nickName: user.nickName,
     });
     return { token };
   }
 
-  private async signToken<T>(id: number, payload?: T) {
+  private async getToken<T>(id: number, payload?: T) {
     return await this.jwtService.signAsync(
       {
         id,
@@ -45,8 +45,8 @@ export class AuthService {
     );
   }
 
-  async signUp(signUpDto: SignUpDto) {
-    const { account, password } = signUpDto;
+  async register(registerDto: RegisterDto) {
+    const { account, password } = registerDto;
     const existingUser = await this.userRepository.findOne({
       where: [{ account }],
     });
@@ -56,7 +56,7 @@ export class AuthService {
 
     const hashedPassword = await this.hashingService.hash(password);
     const user = this.userRepository.create({
-      ...signUpDto,
+      ...registerDto,
       password: hashedPassword,
     });
 
@@ -64,8 +64,8 @@ export class AuthService {
     return ResultData.success(result);
   }
 
-  async signIn(signInDto: SignInDto) {
-    const { account, password } = signInDto;
+  async login(loginDto: LoginDto) {
+    const { account, password } = loginDto;
 
     const user = await this.userRepository.findOne({ where: { account } });
     if (!user) return ResultData.fail('User not found');

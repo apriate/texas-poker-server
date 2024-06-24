@@ -1,4 +1,5 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Index('idx_game_id', ['gameId'], {})
 @Index('idx_user_id', ['userId'], {})
@@ -34,12 +35,14 @@ export class CommandRecord {
   @Column('int', { name: 'roomNumber', nullable: true })
   roomNumber: number | null;
 
+  @Exclude()
   @Column('timestamp', {
     name: 'create_time',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createTime: Date;
 
+  @Exclude()
   @Column('datetime', { name: 'update_time', nullable: true })
   updateTime: Date | null;
 }

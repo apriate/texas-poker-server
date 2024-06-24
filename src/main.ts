@@ -1,13 +1,29 @@
 import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from './utils/common/transform.interceptor';
-import { CommonException } from './utils/common/common.exception';
+import { TransformInterceptor } from './interceptor/transform.interceptor';
+import { CommonExceptionFilter } from './filter/exception.filter';
+import { MyValidatePipe } from './pipe/validate.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors();
   app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalFilters(new CommonException());
+  app.useGlobalFilters(new CommonExceptionFilter());
+  app.useGlobalPipes(new MyValidatePipe());
+
+  // 设置swagger文档
+  const config = new DocumentBuilder()
+    .setTitle('Texas Poker')
+    .setDescription('Texas Poker后台接口文档')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
   await app.listen(3000);
 }
+
 bootstrap();
