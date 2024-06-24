@@ -9,8 +9,8 @@ export class Room {
   @Column('int', { name: 'smallBlind', nullable: true })
   smallBlind: number | null;
 
-  @Column('int', { name: 'isShort', nullable: true })
-  isShort: number | null;
+  @Column('tinyint', { name: 'isShort', nullable: true, width: 1 })
+  isShort: boolean | null;
 
   @Column('int', { name: 'time', nullable: true })
   time: number | null;

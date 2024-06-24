@@ -60,7 +60,7 @@ DROP TABLE IF EXISTS `room`;
 CREATE TABLE `room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `smallBlind` int(11) DEFAULT NULL,
-  `isShort` int(11) DEFAULT NULL,
+  `isShort` tinyint(1) DEFAULT NULL,
   `time` int(11) DEFAULT NULL,
   `roomNumber` text CHARACTER SET latin1,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

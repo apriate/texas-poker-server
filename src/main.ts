@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from './interceptor/transform.interceptor';
-import { CommonExceptionFilter } from './filter/exception.filter';
-import { MyValidatePipe } from './pipe/validate.pipe';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
+import { CommonExceptionFilter } from './common/filter/exception.filter';
+import { MyValidatePipe } from './common/pipe/validate.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +11,7 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new CommonExceptionFilter());
-  app.useGlobalPipes(new MyValidatePipe());
+  app.useGlobalPipes(new MyValidatePipe({ transform: true }));
 
   // 设置swagger文档
   const config = new DocumentBuilder()

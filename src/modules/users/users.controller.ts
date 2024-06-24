@@ -9,7 +9,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
 import { Request } from 'express';
-import { REQUEST_USER_KEY } from '../utils/constants/index';
+import { REQUEST_USER_KEY } from '../../constants/index';
 
 @ApiTags('用户')
 @UseInterceptors(ClassSerializerInterceptor)

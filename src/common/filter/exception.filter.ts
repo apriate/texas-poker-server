@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ResultCode } from '../interfaces/IResult';
+import { ResultCode } from '../../interfaces/IResult';
 
 @Catch()
 // 接口异常拦截器
