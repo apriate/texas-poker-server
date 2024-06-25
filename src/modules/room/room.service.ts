@@ -1,8 +1,10 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Room } from '../../entities/Room';
 import { CreateRoomDTO } from './dto/create.room.dto';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class RoomService {
@@ -11,40 +13,50 @@ export class RoomService {
     private readonly roomRepository: Repository<Room>,
   ) {}
 
-  async create(createRoomDTO: CreateRoomDTO) {
-    try {
-      const { time } = createRoomDTO;
-      const number = String(
-        Math.floor(Math.random() * (1000000 - 100000)) + 100000,
-      );
-      const room = await this.roomRepository.create(createRoomDTO);
-      console.log('XXX --- XXX: room', room);
+  @Inject(RedisService)
+  private redisService: RedisService;
 
-      const result = await this.roomRepository.save({
-        ...room,
-        roomNumber: number,
-      });
-      console.log('XXX --- XXX: ', result);
-      return result;
-      // const roomRedis = await this.redis.set(
-      //   `room:${number}`,
-      //   `${number}`,
-      //   'ex',
-      //   expires,
-      // );
-      // if (result.affectedRows === 1 && roomRedis === 'OK') {
-      //   return { roomNumber: number };
-      // } else {
-      //   throw 'room add error';
-      // }
-    } catch (error) {
-      throw new Error(error);
+  async create(createRoomDTO: CreateRoomDTO): Promise<{ roomNumber: string }> {
+    const { time } = createRoomDTO;
+    const roomNumber = String(
+      Math.floor(Math.random() * (1000000 - 100000)) + 100000,
+    );
+
+    const room = await this.roomRepository.create(createRoomDTO);
+    const result = await this.roomRepository.save({
+      ...room,
+      roomNumber,
+    });
+
+    const roomRedis = await this.redisService.set(
+      `room:${roomNumber}`,
+      `${roomNumber}`,
+      time,
+    );
+
+    if (result && roomRedis === 'OK') {
+      return { roomNumber };
+    } else {
+      throw 'room add error';
     }
-
-    return 'create room error';
   }
 
-  find(createrRoomDTO: CreateRoomDTO) {
-    return 'create room error';
+  async findRoomNumber(number: string): Promise<Room> {
+    const result = await this.roomRepository.findOne({
+      where: { roomNumber: number },
+    });
+
+    if (!result) throw 'invalid room';
+
+    return result;
+  }
+
+  async findById(uid: number): Promise<Room> {
+    return await this.roomRepository.findOne({ where: { id: uid } });
+  }
+
+  async hasRoomNumber(number: string): Promise<boolean> {
+    const roomNumber = await this.redisService.get(`room:${number}`);
+    return !!roomNumber;
   }
 }

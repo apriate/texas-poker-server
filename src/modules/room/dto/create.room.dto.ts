@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateRoomDTO {
@@ -19,7 +19,7 @@ export class CreateRoomDTO {
   })
   readonly smallBlind: number;
 
-  @IsNotEmpty({ message: 'time不能为空' })
+  @IsOptional()
   @IsInt({ message: 'time必须是数字' })
   @Transform(({ value }) => {
     if (typeof value === 'string' && value.trim() !== '') {
@@ -27,5 +27,5 @@ export class CreateRoomDTO {
     }
     return value;
   })
-  readonly time: number;
+  readonly time?: number = 360000;
 }

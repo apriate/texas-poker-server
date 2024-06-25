@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register';
 import { Public } from './decorators/public.decorator';
+import { ResultData } from '../../core/result';
 
 @ApiTags('用户')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -21,14 +22,26 @@ export class AuthController {
   @ApiOperation({ summary: 'register' })
   @Public()
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto) {
+    try {
+      const result = await this.authService.register(registerDto);
+
+      return ResultData.success(result);
+    } catch (error) {
+      return ResultData.fail(error);
+    }
   }
 
   @ApiOperation({ summary: 'login' })
   @Public()
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto) {
+    try {
+      const result = await this.authService.login(loginDto);
+
+      return ResultData.success(result);
+    } catch (error) {
+      return ResultData.fail(error);
+    }
   }
 }

@@ -9,7 +9,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register';
 import { HashingService } from './hashing.service';
 import { ActiveUser } from '../../interfaces/IActiveUser';
-import { ResultData } from 'src/common/result';
+import { ILoginResult } from 'src/interfaces/ILoginResult';
 
 @Injectable()
 export class AuthService {
@@ -45,13 +45,13 @@ export class AuthService {
     );
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<User> {
     const { account, password } = registerDto;
     const existingUser = await this.userRepository.findOne({
       where: [{ account }],
     });
     if (existingUser) {
-      return ResultData.fail('User already exists');
+      throw 'User already exists';
     }
 
     const hashedPassword = await this.hashingService.hash(password);
@@ -60,20 +60,18 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const result = await this.userRepository.save(user);
-    return ResultData.success(result);
+    return await this.userRepository.save(user);
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<ILoginResult> {
     const { account, password } = loginDto;
 
     const user = await this.userRepository.findOne({ where: { account } });
-    if (!user) return ResultData.fail('User not found');
+    if (!user) throw 'User not found';
 
     const isEqual = await this.hashingService.compare(password, user.password);
-    if (!isEqual) return ResultData.fail('Password is incorrect');
+    if (!isEqual) throw 'Password is incorrect';
 
-    const result = await this.generateTokens(user);
-    return ResultData.success(result);
+    return await this.generateTokens(user);
   }
 }
