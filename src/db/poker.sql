@@ -82,29 +82,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 
-
-DROP TRIGGER IF EXISTS `update_comand_record_time`;
-DELIMITER ;;
-CREATE TRIGGER `update_comand_record_time` BEFORE UPDATE ON `command_record` FOR EACH ROW SET NEW.`UPDATE_TIME` = NOW()
-;;
-DELIMITER ;
-DROP TRIGGER IF EXISTS `update_game_time`;
-DELIMITER ;;
-CREATE TRIGGER `update_game_time` BEFORE UPDATE ON `game` FOR EACH ROW SET NEW.`UPDATE_TIME` = NOW()
-;;
-DELIMITER ;
-DROP TRIGGER IF EXISTS `update_game_record_time`;
-DELIMITER ;;
-CREATE TRIGGER `update_game_record_time` BEFORE UPDATE ON `player` FOR EACH ROW SET NEW.`UPDATE_TIME` = NOW()
-;;
-DELIMITER ;
-DROP TRIGGER IF EXISTS `update_user_time`;
-DELIMITER ;;
-CREATE TRIGGER `update_user_time` BEFORE UPDATE ON `user` FOR EACH ROW SET NEW.`UPDATE_TIME` = NOW()
-;;
-DELIMITER ;
-
-
 -- ----------------------------
 -- ommand record 添加 user id 和 game id 索引
 -- ----------------------------

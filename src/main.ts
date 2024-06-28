@@ -1,22 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from './core/interceptor/transform.interceptor';
-import { CommonExceptionFilter } from './core/filter/exception.filter';
-import { MyValidatePipe } from './core/pipe/validate.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
-  app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalFilters(new CommonExceptionFilter());
-  app.useGlobalPipes(new MyValidatePipe({ transform: true }));
 
   // 设置swagger文档
   const config = new DocumentBuilder()
     .setTitle('Texas Poker')
-    .setDescription('Texas Poker后台接口文档')
+    .setDescription('Texas Poker 后台接口文档')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

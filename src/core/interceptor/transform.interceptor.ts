@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   NestInterceptor,
   CallHandler,
@@ -10,8 +11,16 @@ import { Observable } from 'rxjs';
 import { Request, Response } from 'express';
 import { ResultData } from '../result';
 
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+import { getReqestMainInfo } from '../../utils/get-request-main-info';
+
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor {
+  constructor(
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {}
+
   intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -29,6 +38,12 @@ export class TransformInterceptor<T> implements NestInterceptor {
 
     return next.handle().pipe(
       map((data: ResultData) => {
+        // 记录日志（相应数据）
+        this.logger.info('response', {
+          responseData: data,
+          req: getReqestMainInfo(request),
+        });
+
         return data;
       }),
     );

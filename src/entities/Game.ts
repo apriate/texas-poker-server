@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 @Entity('game', { schema: 'poker_test' })
@@ -22,13 +28,20 @@ export class Game {
   pot: string | null;
 
   @Exclude()
-  @Column('timestamp', {
+  @CreateDateColumn({
+    type: 'timestamp',
+    nullable: false,
     name: 'create_time',
-    default: () => 'CURRENT_TIMESTAMP',
+    comment: '创建时间',
   })
   createTime: Date;
 
   @Exclude()
-  @Column('datetime', { name: 'update_time', nullable: true })
-  updateTime: Date | null;
+  @UpdateDateColumn({
+    type: 'timestamp',
+    nullable: false,
+    name: 'update_time',
+    comment: '更新时间',
+  })
+  updateTime: Date;
 }
