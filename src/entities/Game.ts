@@ -16,8 +16,8 @@ export class Game {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('int', { name: 'roomNumber', nullable: true })
-  roomNumber: number | null;
+  @Column('text', { name: 'roomNumber', nullable: true })
+  roomNumber: string | null;
 
   @Column('int', { name: 'status', nullable: true })
   status: number | null;
@@ -28,8 +28,8 @@ export class Game {
   @Column('text', { name: 'winners', nullable: true })
   winners: string | null;
 
-  @Column('decimal', { name: 'pot', nullable: true, precision: 8, scale: 0 })
-  pot: string | null;
+  @Column('int', { name: 'pot', nullable: true })
+  pot: number | null;
 
   @Exclude()
   @CreateDateColumn({

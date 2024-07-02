@@ -28,6 +28,9 @@ import { UsersModule } from './modules/users/users.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { RoomModule } from './modules/room/room.module';
 import { IoModule } from './modules/io/io.module';
+import { GameModule } from './modules/game/game.module';
+import { PlayerModule } from './modules/player/player.module';
+import { CommandRecordModule } from './modules/command-record/command-record.module';
 
 @Module({
   imports: [
@@ -111,6 +114,9 @@ import { IoModule } from './modules/io/io.module';
     RedisModule,
     RoomModule,
     IoModule,
+    GameModule,
+    PlayerModule,
+    CommandRecordModule,
   ],
   controllers: [AppController],
   providers: [

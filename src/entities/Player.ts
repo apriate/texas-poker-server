@@ -21,8 +21,8 @@ export class Player {
   @Column('int', { name: 'gameId', nullable: true })
   gameId: number | null;
 
-  @Column('int', { name: 'roomNumber', nullable: true })
-  roomNumber: number | null;
+  @Column('text', { name: 'roomNumber', nullable: true })
+  roomNumber: string | null;
 
   @Column('int', { name: 'buyIn' })
   buyIn: number;

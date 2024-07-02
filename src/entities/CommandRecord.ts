@@ -43,8 +43,8 @@ export class CommandRecord {
   @Column('int', { name: 'pot', nullable: true })
   pot: number | null;
 
-  @Column('int', { name: 'roomNumber', nullable: true })
-  roomNumber: number | null;
+  @Column('text', { name: 'roomNumber', nullable: true })
+  roomNumber: string | null;
 
   @Exclude()
   @CreateDateColumn({
