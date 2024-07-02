@@ -11,7 +11,7 @@ import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { REQUEST_USER_KEY } from '../../../constants';
 import jwtConfig from '../../../config/jwt.config';
-import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { IS_PUBLIC_KEY } from '../decorator/public.decorator';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {

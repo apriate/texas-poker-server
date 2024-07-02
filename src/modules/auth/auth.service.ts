@@ -26,6 +26,7 @@ export class AuthService {
     const token = await this.getToken<Partial<ActiveUser>>(user.id, {
       account: user.account,
       nickName: user.nickName,
+      userId: String(user.id),
     });
     return { token };
   }

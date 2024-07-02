@@ -10,5 +10,6 @@ import { AppLoggerModule } from '../logger/logger.module';
   imports: [TypeOrmModule.forFeature([Room]), RedisModule, AppLoggerModule],
   controllers: [RoomController],
   providers: [RoomService],
+  exports: [RoomService],
 })
 export class RoomModule {}

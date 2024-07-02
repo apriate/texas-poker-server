@@ -9,6 +9,10 @@ import { Exclude } from 'class-transformer';
 
 @Entity('room', { schema: 'poker_test' })
 export class Room {
+  constructor(partial: Partial<Room>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 

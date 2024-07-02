@@ -27,6 +27,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { RoomModule } from './modules/room/room.module';
+import { IoModule } from './modules/io/io.module';
 
 @Module({
   imports: [
@@ -109,6 +110,7 @@ import { RoomModule } from './modules/room/room.module';
     UsersModule,
     RedisModule,
     RoomModule,
+    IoModule,
   ],
   controllers: [AppController],
   providers: [

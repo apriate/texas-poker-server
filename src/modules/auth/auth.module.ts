@@ -9,7 +9,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { HashingService } from './hashing.service';
 import { APP_GUARD } from '@nestjs/core';
-import { AccessTokenGuard } from './guards/access-token.guard';
+import { AccessTokenGuard } from './guard/access-token.guard';
 
 @Module({
   imports: [

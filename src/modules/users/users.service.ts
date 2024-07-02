@@ -10,7 +10,11 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async checkLogin(id: number): Promise<User> {
+  async findOneById(id: number): Promise<User> {
     return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async checkLogin(id: number): Promise<User> {
+    return await this.findOneById(id);
   }
 }

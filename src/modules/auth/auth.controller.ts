@@ -10,7 +10,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register';
-import { Public } from './decorators/public.decorator';
+import { Public } from './decorator/public.decorator';
 import { ResultData } from '../../core/result';
 
 @ApiTags('用户')

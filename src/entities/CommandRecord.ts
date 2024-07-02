@@ -12,6 +12,10 @@ import { Exclude } from 'class-transformer';
 @Index('idx_user_id', ['userId'], {})
 @Entity('command_record', { schema: 'poker_test' })
 export class CommandRecord {
+  constructor(partial: Partial<CommandRecord>) {
+    Object.assign(this, partial);
+  }
+
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
