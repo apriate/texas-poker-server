@@ -16,8 +16,8 @@ import { AppLoggerService } from '../logger/logger.service';
 @Controller('game/room')
 export class RoomController {
   constructor(
-    private readonly roomService: RoomService, // 注入日志
-    private readonly logger: AppLoggerService,
+    private readonly roomService: RoomService,
+    private readonly logger: AppLoggerService, // 注入日志
   ) {
     this.logger.setContext(RoomController.name);
   }

@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { ICommandRecord } from '../../interfaces/ICommandRecord';
 import { CommandRecord } from '../../entities/CommandRecord';
-
-import { CreateCommandRecordDto } from './dto/create-command-record.dto';
-import { UpdateCommandRecordDto } from './dto/update-command-record.dto';
 
 @Injectable()
 export class CommandRecordService {
@@ -23,29 +20,63 @@ export class CommandRecordService {
     const newGame = this.commandRecordRepository.create(entities);
     const gameInfo = await this.commandRecordRepository.save(newGame);
 
-    console.log('XXX --- XXX: game add', gameInfo);
     if (gameInfo) {
       return { succeed: !!gameInfo, id: gameInfo.id };
     }
   }
 
-  create(createCommandRecordDto: CreateCommandRecordDto) {
-    return 'This action adds a new commandRecord';
+  async findByGameId(gameId: number): Promise<ICommandRecord[]> {
+    const result = await this.commandRecordRepository.query(
+      'SELECT\n' +
+        '\tcommand_record.counter,\n' +
+        '\tcommand_record.gameStatus,\n' +
+        '\tcommand,\n' +
+        '\thandCard,\n' +
+        '\ttype,\n' +
+        '\tcommonCard,\n' +
+        '\tpot,\n' +
+        '\tcommand_record.userId,\n' +
+        '\t`user`.nickName\n' +
+        'FROM\n' +
+        '\tcommand_record\n' +
+        'INNER JOIN `user` ON `user`.id = command_record.userId\n' +
+        'INNER JOIN player ON player.userId = command_record.userId\n' +
+        '\twhere command_record.gameId = ? and player.gameId = ?',
+      [gameId, gameId],
+    );
+
+    return JSON.parse(JSON.stringify(result));
   }
 
-  findAll() {
-    return `This action returns all commandRecord`;
+  async findByGameIds(ids: number[]): Promise<ICommandRecord[]> {
+    const result = await this.commandRecordRepository.find({
+      where: {
+        gameId: In(ids),
+      },
+    });
+    console.log('XXX --- XXX: findByGameIds', result);
+
+    return JSON.parse(JSON.stringify(result));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} commandRecord`;
-  }
+  async findPast7DayGameIds(userId: number): Promise<number[]> {
+    const result = await this.commandRecordRepository.query(
+      'SELECT\n' +
+        '\tDISTINCT gameId\n' +
+        '\tFROM command_record\n' +
+        '\tWHERE userId = ?\n' +
+        '\tAND create_time >= DATE_SUB(now(),interval 7 DAY)',
+      [userId],
+    );
+    console.log('XXX --- XXX: findPast7DayGameIds', userId, result);
+    const recordList = JSON.parse(JSON.stringify(result));
 
-  update(id: number, updateCommandRecordDto: UpdateCommandRecordDto) {
-    return `This action updates a #${id} commandRecord`;
-  }
+    if (recordList) {
+      return recordList.map((item: ICommandRecord) => {
+        return item.gameId;
+      });
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} commandRecord`;
+    return [];
   }
 }

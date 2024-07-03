@@ -15,7 +15,6 @@ export class GameService {
     const newGame = this.gameRepository.create(game);
     const gameInfo = await this.gameRepository.save(newGame);
 
-    console.log('XXX --- XXX: game add', gameInfo);
     if (gameInfo) {
       return { succeed: !!gameInfo, id: gameInfo.id };
     }
@@ -23,22 +22,19 @@ export class GameService {
 
   async update(game: IGame) {
     const gameInfo = await this.gameRepository.update(game.id, game);
-    console.log('XXX --- XXX: game update', gameInfo);
     return { succeed: !!gameInfo };
   }
 
-  async findByID(id: number): Promise<Game> {
+  async findById(id: number): Promise<Game> {
     return await this.gameRepository.findOne({ where: { id } });
   }
 
-  async findByIDs(ids: number[]): Promise<Game[]> {
+  async findByIds(ids: number[]): Promise<Game[]> {
     return await this.gameRepository.find({ where: { id: In(ids) } });
   }
 
   async findByRoomNumber(roomNumber: string): Promise<Game[]> {
-    const result = await this.gameRepository.findOne({ where: { roomNumber } });
-    console.log(result, 'game -======================');
-    console.log('XXX --- XXX: game findByRoomNumber', result);
+    const result = await this.gameRepository.find({ where: { roomNumber } });
     return JSON.parse(JSON.stringify(result));
   }
 }

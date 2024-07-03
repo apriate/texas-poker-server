@@ -906,6 +906,9 @@ export class IoGateway
         }
       });
       await this.updateGameInfo(socket);
+      await this.adapter(room as string, 'online', 'sitList', {
+        sitList: roomInfo.sit,
+      });
     } catch (e) {
       console.log(e);
     }
