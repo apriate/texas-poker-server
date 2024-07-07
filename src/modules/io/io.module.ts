@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from '../../config/jwt.config';
 import { IoGateway } from './io.gateway';
@@ -10,6 +9,7 @@ import { RedisModule } from '../redis/redis.module';
 import { GameModule } from '../game/game.module';
 import { PlayerModule } from '../player/player.module';
 import { CommandRecordModule } from '../command-record/command-record.module';
+import { AppLoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
@@ -20,6 +20,7 @@ import { CommandRecordModule } from '../command-record/command-record.module';
     GameModule,
     PlayerModule,
     CommandRecordModule,
+    AppLoggerModule,
   ],
   providers: [IoGateway, IoService],
 })

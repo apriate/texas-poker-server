@@ -38,6 +38,7 @@ import { IoService } from './io.service';
 import { GameService } from '../game/game.service';
 import { PlayerService } from '../player/player.service';
 import { CommandRecordService } from '../command-record/command-record.service';
+import { AppLoggerService } from '../logger/logger.service';
 
 @Injectable()
 @UseFilters(new IoExceptionFilter())
@@ -57,7 +58,10 @@ export class IoGateway
     private readonly gameService: GameService,
     private readonly playerService: PlayerService,
     private readonly commandRecordService: CommandRecordService,
-  ) {}
+    private readonly logger: AppLoggerService,
+  ) {
+    this.logger.setContext(IoGateway.name);
+  }
 
   @WebSocketServer()
   io: Server;
@@ -76,8 +80,8 @@ export class IoGateway
       await this.connectAuth(socket);
       await this.connectJoin(socket);
       await this.connectLeave();
-    } catch (e) {
-      console.log('connect error', e);
+    } catch (error) {
+      this.logger.error(null, 'connect error', { error });
     }
   }
 
@@ -205,8 +209,8 @@ export class IoGateway
         return;
       }
       console.log('play------------', room);
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      this.logger.error(null, 'connectAuth error', { error });
       tick(
         id,
         {
@@ -368,8 +372,9 @@ export class IoGateway
         `User(${user.nickName}) joined.`,
         'join',
       );
-    } catch (e) {
-      throw e;
+    } catch (error) {
+      this.logger.error(null, 'connectJoin error', { error });
+      throw error;
     }
   }
 
@@ -387,8 +392,7 @@ export class IoGateway
       const msg = parseMsg('exchange', payload, { client, target });
       this.io.emit(target, msg);
     } catch (error) {
-      console.log('XXX --- XXX: error', error);
-      // TODO logger
+      this.logger.error(null, 'exchange error', { error });
     }
   }
 
@@ -404,8 +408,7 @@ export class IoGateway
         message: payload,
       });
     } catch (error) {
-      console.log('XXX --- XXX: error', error);
-      // TODO logger
+      this.logger.error(null, 'broadcast error', { error });
     }
   }
 
@@ -470,8 +473,8 @@ export class IoGateway
         this.updatePlayer(room as string, roomInfo.players, 'players');
         console.log('not in the game', player);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      this.logger.error(null, 'buyIn error', { error });
     }
   }
 
@@ -575,8 +578,8 @@ export class IoGateway
           sitList: roomInfo.sit,
         });
       }
-    } catch (e) {
-      console.log(e + 'restart ex');
+    } catch (error) {
+      this.logger.error(null, 'reStart error', { error });
     }
   }
 
@@ -794,8 +797,7 @@ export class IoGateway
         throw 'game already playing';
       }
     } catch (error) {
-      console.log('playGame error', error);
-      // Todo logger
+      this.logger.error(null, 'playGame error', { error });
     }
   }
 
@@ -869,8 +871,8 @@ export class IoGateway
       } else {
         throw 'action flow incorrect';
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      this.logger.error(null, 'action error', { error });
     }
   }
 
@@ -887,8 +889,8 @@ export class IoGateway
       await this.adapter(room as string, 'online', 'sitList', {
         sitList,
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      this.logger.error(null, 'sitDown error', { error });
     }
   }
 
@@ -909,8 +911,8 @@ export class IoGateway
       await this.adapter(room as string, 'online', 'sitList', {
         sitList: roomInfo.sit,
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      this.logger.error(null, 'standUP error', { error });
     }
   }
 
@@ -942,8 +944,8 @@ export class IoGateway
           actionEndTime: roomInfo.game.actionEndTime,
         });
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      this.logger.error(null, 'delayTime error', { error });
     }
   }
 }

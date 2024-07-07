@@ -23,8 +23,8 @@ export class IoAuthGuard implements CanActivate {
 
       // 校验token 失败报错
       if (!verified) throw new UnauthorizedException();
-    } catch (e) {
-      throw new WsException(e.message);
+    } catch (error) {
+      throw new WsException(error.message);
     }
 
     return true;

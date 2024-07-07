@@ -15,7 +15,7 @@ async function bootstrap() {
   // 设置swagger文档
   const config = new DocumentBuilder()
     .setTitle('Texas Poker')
-    .setDescription('Texas Poker 后台接口文档')
+    .setDescription('Texas Poker API')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
