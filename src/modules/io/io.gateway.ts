@@ -791,7 +791,7 @@ export class IoGateway
           throw 'command add error';
         }
       } else {
-        throw 'game already paling';
+        throw 'game already playing';
       }
     } catch (error) {
       console.log('playGame error', error);
