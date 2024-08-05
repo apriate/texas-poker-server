@@ -4,7 +4,6 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import * as Joi from 'joi';
-import envConfig from '../config/env';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -36,7 +35,9 @@ import { CommandRecordModule } from './modules/command-record/command-record.mod
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // 设置为全局
-      envFilePath: [envConfig.path],
+      envFilePath: [
+        process.env.NODE_ENV === 'production' ? '.env.prod' : '.env',
+      ],
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().default(3306),
