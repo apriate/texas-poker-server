@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { JwtService } from '@nestjs/jwt';
-import { getConfig } from '../../../config/jwt.config';
+import { getConfig } from '../../../../config/jwt.config';
 import * as qs from 'qs';
 
 @Injectable()

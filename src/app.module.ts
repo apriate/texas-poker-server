@@ -4,7 +4,7 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import * as Joi from 'joi';
-import envConfig from './config/env';
+import envConfig from '../config/env';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';

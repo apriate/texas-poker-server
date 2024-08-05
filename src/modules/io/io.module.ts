@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import jwtConfig from '../../config/jwt.config';
+import jwtConfig from '../../../config/jwt.config';
 import { IoGateway } from './io.gateway';
 import { IoService } from './io.service';
 import { UsersModule } from '../users/users.module';

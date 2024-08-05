@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { User } from '../../entities/User';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import jwtConfig from '../../config/jwt.config';
+import jwtConfig from '../../../config/jwt.config';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { HashingService } from './hashing.service';

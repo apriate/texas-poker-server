@@ -4,7 +4,7 @@ import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../entities/User';
-import jwtConfig from '../../config/jwt.config';
+import jwtConfig from '../../../config/jwt.config';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register';
 import { HashingService } from './hashing.service';
