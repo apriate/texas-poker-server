@@ -31,13 +31,13 @@ import { GameModule } from './modules/game/game.module';
 import { PlayerModule } from './modules/player/player.module';
 import { CommandRecordModule } from './modules/command-record/command-record.module';
 
+const envPath = `.env.${process.env.NODE_ENV || 'development'}`;
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // 设置为全局
-      envFilePath: [
-        process.env.NODE_ENV === 'production' ? '.env.prod' : '.env',
-      ],
+      envFilePath: envPath,
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().default(3306),

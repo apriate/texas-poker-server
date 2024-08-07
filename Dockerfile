@@ -7,7 +7,7 @@
 FROM node:18 As development
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY --chown=node:node pnpm-lock.yaml ./
 
@@ -29,11 +29,11 @@ USER node
 FROM node:18 As build
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY --chown=node:node pnpm-lock.yaml ./
 
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=development /app/node_modules ./node_modules
 
 COPY --chown=node:node . .
 
@@ -53,7 +53,9 @@ USER node
 
 FROM node:18-alpine As production
 
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --chown=node:node --from=build /app/node_modules ./node_modules
+COPY --chown=node:node --from=build /app/dist ./dist
+
+ENV NODE_ENV production
 
 CMD [ "node", "dist/src/main.js" ]
