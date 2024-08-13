@@ -29,7 +29,7 @@ export class MyIoAdapter extends IoAdapter {
     // !!! 对socket.io 网关中的 handleConnection 在连接时鉴权失败处理
     options.allowRequest = async (request, allowFunction) => {
       const token = qs.parse(request.url)?.token as string;
-      const verified = token && (await this.jwtService.verify(token));
+      const verified = token && (await this.jwtService.verifyAsync(token));
 
       if (verified) {
         return allowFunction(null, true);
